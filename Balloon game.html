@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<svg  width="1000" height="1000" id='balloon'>
+		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="orange" stroke-width="5" fill="red"  />
+		
+ 	</svg>
+	
+	<script>
+	var i = 0
+	const balloon = document.getElementById('circle');
+	var y = parseFloat(balloon.getAttributeNS(null, 'cy'));
+	var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
+	
+	function moveleft(timestamp) {
+		x -= 10;
+		balloon.setAttributeNS(null, 'cx', x);
+		
+		if (x>50) { 
+			window.requestAnimationFrame(moveleft);
+		} else {
+			window.requestAnimationFrame(movedown);
+		}
+	}
+	
+	function moveup(timestamp) {
+		y -= 10;
+		balloon.setAttributeNS(null, 'cy', y);
+		
+		if (y>50) {
+			window.requestAnimationFrame(moveup);
+		} else {
+			window.requestAnimationFrame(moveleft);
+		}
+	}
+	
+	
+	function moveright(timestamp) {
+		x += 10;
+		balloon.setAttributeNS(null, 'cx', x);
+		
+		if (x<550) {
+			window.requestAnimationFrame(moveright);
+		} else {
+			window.requestAnimationFrame(moveup);
+		}
+	}
+	
+	function movedown(timestamp) {
+		y += 10;
+		balloon.setAttributeNS(null, 'cy', y);
+		
+		if (y<550) {
+			window.requestAnimationFrame(movedown);
+		} else {
+			window.requestAnimationFrame(moveright);
+		}
+	}
+
+	
+	window.requestAnimationFrame(movedown);
+</script>
+
+</body>
+</html>
