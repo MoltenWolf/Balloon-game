@@ -2,65 +2,91 @@
 <html>
 <body>
 
-<svg  width="1000" height="1000" id='balloon'>
+	<svg  width="1000" height="1000" id='balloon' onload="mouseClick(evt)">
 		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="orange" stroke-width="5" fill="red"  />
-		
  	</svg>
 	
 	<script>
-	var i = 0
-	const balloon = document.getElementById('circle');
-	var y = parseFloat(balloon.getAttributeNS(null, 'cy'));
-	var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
-	
-	function moveleft(timestamp) {
-		x -= 10;
-		balloon.setAttributeNS(null, 'cx', x);
+		var svg = document.getElementById('balloon');
+		var gamespeed = 2
+		var whenGameStart = 0;
+		var points = 0;
+		var numPoints = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+		var txt = document.createTextNode("points: 0");
+		const balloon = document.getElementById('circle');
+		var y = parseFloat(balloon.getAttributeNS(null, 'cy'));
+		var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
 		
-		if (x>50) { 
-			window.requestAnimationFrame(moveleft);
-		} else {
-			window.requestAnimationFrame(movedown);
-		}
-	}
-	
-	function moveup(timestamp) {
-		y -= 10;
-		balloon.setAttributeNS(null, 'cy', y);
+		numPoints.setAttributeNS(null, 'x', 5);
+		numPoints.setAttributeNS(null, 'y', 15);
+		numPoints.appendChild(txt);
+		svg.appendChild(numPoints);
 		
-		if (y>50) {
-			window.requestAnimationFrame(moveup);
-		} else {
-			window.requestAnimationFrame(moveleft);
+		function mouseClick(evt) {
+			var svg = evt.target;
+			svg.addEventListener('mouseup', startGame);
+			
+			function startGame(evt) {
+				var target = evt.target;
+				if (whenGameStart == 0) {
+					window.requestAnimationFrame(movedown);
+					whenGameStart = 1;
+				} 
+				
+				if (target.getAttributeNS(null, "id") == "circle") {
+					points++;
+					numPoints.innerHTML = "points: " + points;
+				}
+			}
 		}
-	}
-	
-	
-	function moveright(timestamp) {
-		x += 10;
-		balloon.setAttributeNS(null, 'cx', x);
 		
-		if (x<550) {
-			window.requestAnimationFrame(moveright);
-		} else {
-			window.requestAnimationFrame(moveup);
-		}
-	}
-	
-	function movedown(timestamp) {
-		y += 10;
-		balloon.setAttributeNS(null, 'cy', y);
 		
-		if (y<550) {
-			window.requestAnimationFrame(movedown);
-		} else {
-			window.requestAnimationFrame(moveright);
+		
+		function moveleft(timestamp) {
+			x -= gamespeed;
+			balloon.setAttributeNS(null, 'cx', x);
+			
+			if (x>50) { 
+				window.requestAnimationFrame(moveleft);
+			} else {
+				window.requestAnimationFrame(movedown);
+			}
 		}
-	}
-
-	
-	window.requestAnimationFrame(movedown);
-</script>
+		
+		function moveup(timestamp) {
+			y -= gamespeed;
+			balloon.setAttributeNS(null, 'cy', y);
+			
+			if (y>50) {
+				window.requestAnimationFrame(moveup);
+			} else {
+				window.requestAnimationFrame(moveleft);
+			}
+		}
+		
+		
+		function moveright(timestamp) {
+			x += gamespeed;
+			balloon.setAttributeNS(null, 'cx', x);
+			
+			if (x<550) {
+				window.requestAnimationFrame(moveright);
+			} else {
+				window.requestAnimationFrame(moveup);
+			}
+		}
+		
+		function movedown(timestamp) {
+			y += gamespeed;
+			balloon.setAttributeNS(null, 'cy', y);
+			
+			if (y<550) {
+				window.requestAnimationFrame(movedown);
+			} else {
+				window.requestAnimationFrame(moveright);
+			}
+		}
+	</script>
 
 </body>
 </html>
