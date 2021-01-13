@@ -28,15 +28,17 @@
 			
 			function startGame(evt) {
 				var target = evt.target;
+				if (target.getAttributeNS(null, "id") == "circle" && whenGameStart > 0) {
+					points++;
+					numPoints.innerHTML = "points: " + points;
+				}
+				
 				if (whenGameStart == 0) {
 					window.requestAnimationFrame(movedown);
 					whenGameStart = 1;
 				} 
 				
-				if (target.getAttributeNS(null, "id") == "circle") {
-					points++;
-					numPoints.innerHTML = "points: " + points;
-				}
+				
 			}
 		}
 		
