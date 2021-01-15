@@ -1,29 +1,57 @@
 <!DOCTYPE html>
 <html>
 <body>
-
-	<svg  width="1000" height="1000" id='balloon' onload="mouseClick(evt)">
+	<h1 style = "font-family:Arial; background-color:powderblue; text-align:center; font-style:italic">Try To Catch Me!</h1>
+	<svg  width="1912" height="837" id='balloon' onload="mouseClick(evt)">
 		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="orange" stroke-width="5" fill="red"  />
  	</svg>
-	
 	<script>
 		var svg = document.getElementById('balloon');
 		var gamespeed = 2
 		var whenGameStart = 0;
 		var points = 0;
+		var repeat = 30;
 		var numPoints = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		var txt = document.createTextNode("points: 0");
 		const balloon = document.getElementById('circle');
 		var y = parseFloat(balloon.getAttributeNS(null, 'cy'));
 		var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
+		var coord = document.getElementById('coord');
+		var incr_x, incr_y;
 		
 		numPoints.setAttributeNS(null, 'x', 5);
 		numPoints.setAttributeNS(null, 'y', 15);
 		numPoints.appendChild(txt);
 		svg.appendChild(numPoints);
 		
+		function randomPos (timestamp) {
+			if (repeat < 30) {
+				repeat++;
+			} else {
+				incr_x = (Math.floor(Math.random() * 10)-5)*gamespeed;
+				incr_y = (Math.floor(Math.random() * 10)-5)*gamespeed;
+				repeat = 0;
+			}
+			
+			if (x + incr_x < 40 || x + incr_x > 1911 - 40) {
+				incr_x *= -1;
+			}
+			if (y + incr_y < 40 || y + incr_y > 837 - 40) {
+				incr_y *= -1;
+			}
+			
+			x += incr_x;
+			y += incr_y;
+			
+			
+			balloon.setAttributeNS(null, 'cx', x);
+			balloon.setAttributeNS(null,'cy', y);
+			window.requestAnimationFrame(randomPos);
+		}
+		
 		function mouseClick(evt) {
 			var svg = evt.target;
+			evt.preventDefault();
 			svg.addEventListener('mouseup', startGame);
 			
 			function startGame(evt) {
@@ -34,7 +62,7 @@
 				}
 				
 				if (whenGameStart == 0) {
-					window.requestAnimationFrame(movedown);
+					window.requestAnimationFrame(randomPos);
 					whenGameStart = 1;
 				} 
 				
@@ -51,7 +79,11 @@
 			if (x>50) { 
 				window.requestAnimationFrame(moveleft);
 			} else {
-				window.requestAnimationFrame(movedown);
+				if (points < 11) {
+					window.requestAnimationFrame(movedown);
+				} else {
+					window.requestAnimationFrame(randomPos);
+				}
 			}
 		}
 		
@@ -62,7 +94,11 @@
 			if (y>50) {
 				window.requestAnimationFrame(moveup);
 			} else {
-				window.requestAnimationFrame(moveleft);
+				if (points < 11) {
+					window.requestAnimationFrame(moveleft);
+				} else {
+					window.requestAnimationFrame(randomPos);
+				}
 			}
 		}
 		
@@ -71,10 +107,14 @@
 			x += gamespeed;
 			balloon.setAttributeNS(null, 'cx', x);
 			
-			if (x<550) {
+			if (x<2000) {
 				window.requestAnimationFrame(moveright);
 			} else {
-				window.requestAnimationFrame(moveup);
+				if (points < 11) {
+					window.requestAnimationFrame(moveup);
+				} else {
+					window.requestAnimationFrame(randomPos);
+				}
 			}
 		}
 		
@@ -85,10 +125,14 @@
 			if (y<550) {
 				window.requestAnimationFrame(movedown);
 			} else {
-				window.requestAnimationFrame(moveright);
+				if (points < 11) {
+					window.requestAnimationFrame(moveright);
+				} else {
+					window.requestAnimationFrame(randomPos);	
+				}
 			}
 		}
-	</script>
 
+	</script>
 </body>
 </html>
