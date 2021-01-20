@@ -3,21 +3,26 @@
 <body>
 	<h1 style = "font-family:Arial; background-color:powderblue; text-align:center; font-style:italic">Try To Catch Me!</h1>
 	<svg  width="1912" height="837" id='balloon' onload="mouseClick(evt)">
-		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="orange" stroke-width="5" fill="red"  />
+		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="lightblue" stroke-width="5" fill="turquoise"  />	
+		<circle cx= "50" cy= "50" r= "40" id="enemy" stroke="green" stroke-width="5" fill="turquoise"  />
  	</svg>
 	<script>
 		var svg = document.getElementById('balloon');
-		var gamespeed = 2
+		var gamespeed = 2;
 		var whenGameStart = 0;
 		var points = 0;
 		var repeat = 30;
 		var numPoints = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		var txt = document.createTextNode("points: 0");
 		const balloon = document.getElementById('circle');
+		const enemy = document.getElementById('enemy');
 		var y = parseFloat(balloon.getAttributeNS(null, 'cy'));
 		var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
+		var enemy_y = parseFloat(enemy.getAttributeNS(null, 'cy'));
+		var enemy_x = parseFloat(enemy.getAttributeNS(null, 'cx'));
 		var coord = document.getElementById('coord');
 		var incr_x, incr_y;
+		var incr_enemy_x, incr_enemy_y;
 		
 		numPoints.setAttributeNS(null, 'x', 5);
 		numPoints.setAttributeNS(null, 'y', 15);
@@ -27,25 +32,39 @@
 		function randomPos (timestamp) {
 			if (repeat < 30) {
 				repeat++;
+				
 			} else {
 				incr_x = (Math.floor(Math.random() * 10)-5)*gamespeed;
 				incr_y = (Math.floor(Math.random() * 10)-5)*gamespeed;
+				incr_enemy_x = (Math.floor(Math.random() * 10)-5)*(gamespeed*2);
+				incr_enemy_y = (Math.floor(Math.random() * 10)-5)*(gamespeed*2);
 				repeat = 0;
+				
 			}
-			
+
 			if (x + incr_x < 40 || x + incr_x > 1911 - 40) {
 				incr_x *= -1;
 			}
 			if (y + incr_y < 40 || y + incr_y > 837 - 40) {
 				incr_y *= -1;
 			}
+			if (enemy_x + incr_enemy_x < 40 || enemy_x + incr_enemy_x > 1911 - 40) {
+				incr_enemy_x *= -1;
+			}
+			if (enemy_y + incr_enemy_x < 40 || enemy_y + incr_enemy_y > 837 - 40) {
+				incr_enemy_y *= -1;
+			}
 			
 			x += incr_x;
 			y += incr_y;
+			enemy_x += incr_enemy_x;
+			enemy_y += incr_enemy_y;
 			
 			
 			balloon.setAttributeNS(null, 'cx', x);
 			balloon.setAttributeNS(null,'cy', y);
+			enemy.setAttributeNS(null, 'cx', enemy_x);
+			enemy.setAttributeNS(null,'cy', enemy_y);
 			window.requestAnimationFrame(randomPos);
 		}
 		
@@ -56,8 +75,13 @@
 			
 			function startGame(evt) {
 				var target = evt.target;
+				evt.preventDefault();
 				if (target.getAttributeNS(null, "id") == "circle" && whenGameStart > 0) {
 					points++;
+					numPoints.innerHTML = "points: " + points;
+				}
+				if (target.getAttributeNS(null, "id") == "enemy" && whenGameStart > 0) {
+					points--;
 					numPoints.innerHTML = "points: " + points;
 				}
 				
@@ -68,9 +92,7 @@
 				
 				
 			}
-		}
-		
-		
+		}		
 		
 		function moveleft(timestamp) {
 			x -= gamespeed;
