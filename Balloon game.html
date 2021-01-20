@@ -1,10 +1,15 @@
-<!DOCTYPE html>
 <html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
 	<h1 style = "font-family:Arial; background-color:powderblue; text-align:center; font-style:italic">Try To Catch Me!</h1>
-	<svg  width="1912" height="837" id='balloon' onload="mouseClick(evt)">
+	<p>Click the ball with the light blue outline. You will earn a point each click. Avoid clicking the ball with the green outline. It will deduct a point.</p>
+	<svg  width="90%" height="90%" id='balloon' onload="mouseClick(evt)">	
+		<rect width="100%" height="100%" style="fill:gainsboro; stroke-width:3; stroke:rgb(0,0,0)" />
 		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="lightblue" stroke-width="5" fill="turquoise"  />	
 		<circle cx= "50" cy= "50" r= "40" id="enemy" stroke="green" stroke-width="5" fill="turquoise"  />
+
  	</svg>
 	<script>
 		var svg = document.getElementById('balloon');
@@ -20,10 +25,12 @@
 		var x = parseFloat(balloon.getAttributeNS(null, 'cx'));
 		var enemy_y = parseFloat(enemy.getAttributeNS(null, 'cy'));
 		var enemy_x = parseFloat(enemy.getAttributeNS(null, 'cx'));
+		var canvasHeight = svg.clientHeight;
+		var canvasWidth = svg.clientWidth;
 		var coord = document.getElementById('coord');
 		var incr_x, incr_y;
 		var incr_enemy_x, incr_enemy_y;
-		
+		console.log("Height: " + canvasHeight + " " + "Width: " + canvasWidth);
 		numPoints.setAttributeNS(null, 'x', 5);
 		numPoints.setAttributeNS(null, 'y', 15);
 		numPoints.appendChild(txt);
@@ -42,16 +49,16 @@
 				
 			}
 
-			if (x + incr_x < 40 || x + incr_x > 1911 - 40) {
+			if (x + incr_x < 40 || x + incr_x > canvasWidth - 40) {
 				incr_x *= -1;
 			}
-			if (y + incr_y < 40 || y + incr_y > 837 - 40) {
+			if (y + incr_y < 40 || y + incr_y > canvasHeight - 40) {
 				incr_y *= -1;
 			}
-			if (enemy_x + incr_enemy_x < 40 || enemy_x + incr_enemy_x > 1911 - 40) {
+			if (enemy_x + incr_enemy_x < 40 || enemy_x + incr_enemy_x > canvasWidth - 40) {
 				incr_enemy_x *= -1;
 			}
-			if (enemy_y + incr_enemy_x < 40 || enemy_y + incr_enemy_y > 837 - 40) {
+			if (enemy_y + incr_enemy_x < 40 || enemy_y + incr_enemy_y > canvasHeight - 40) {
 				incr_enemy_y *= -1;
 			}
 			
