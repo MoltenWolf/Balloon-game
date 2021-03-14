@@ -2,14 +2,15 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
+	
 	<h1 style = "font-family:Arial; background-color:powderblue; text-align:center; font-style:italic">Try To Catch Me!</h1>
-	<p>Click the ball with the light blue outline. You will earn a point each click. Avoid clicking the ball with the green outline. It will deduct a point.</p>
+	<p>Click the ball with the light sky blue outline. You will earn a point each click. Avoid clicking the ball with the navy outline. It will deduct a point.</p>
 	<svg  width="90%" height="90%" id='balloon' onload="mouseClick(evt)">	
 		<rect width="100%" height="100%" style="fill:gainsboro; stroke-width:3; stroke:rgb(0,0,0)" />
-		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="turquoise" stroke-width="5" fill="midnightblue"  />	
-		<circle cx= "50" cy= "50" r= "40" id="enemy" stroke="green" stroke-width="5" fill="blue"  />
-
+		<circle cx= "50" cy= "50" r= "40" id="circle" stroke="orange" stroke-width="5" fill="red"  />	
+		<circle cx= "50" cy= "50" r= "40" id="enemy" stroke="navy" stroke-width="5" fill="midnightblue"  />
  	</svg>
 	<script>
 		var svg = document.getElementById('balloon');
@@ -29,14 +30,68 @@
 		var canvasWidth = svg.clientWidth;
 		var coord = document.getElementById('coord');
 		var incr_x, incr_y;
+		var eBalls = [];
+		var clonex = [];
+		var cloney = [];
+		var incrclonex = [], incrcloney = [], repeat_clone = [];
+		var r, g, b;
 		var incr_enemy_x, incr_enemy_y;
-		console.log("Height: " + canvasHeight + " " + "Width: " + canvasWidth);
 		numPoints.setAttributeNS(null, 'x', 5);
 		numPoints.setAttributeNS(null, 'y', 15);
 		numPoints.appendChild(txt);
 		svg.appendChild(numPoints);
 		
-		function randomPos (timestamp) {
+		//create 10 balls array
+		
+		for (let i = 0; i < 10; i++) {
+			r = Math.floor(Math.random() * 0);
+			g = Math.floor(Math.random() * 255);
+			b = Math.floor(Math.random() * 255);
+			repeat_clone[i] = 30
+			eBalls[i] = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+			cloney[i] = Math.floor((Math.random()) * (canvasHeight - 80) + 40);
+			clonex[i] = Math.floor((Math.random()) * (canvasWidth - 80) + 40);
+			eBalls[i].setAttributeNS(null, 'cx', clonex[i]);
+			eBalls[i].setAttributeNS(null, 'cy', cloney[i]);
+			eBalls[i].setAttributeNS(null, 'r', 40);
+			eBalls[i].setAttributeNS(null, 'fill', "rgb("+ r + "," + g + "," + b + ")" );
+			eBalls[i].setAttributeNS(null, 'stroke', "midnightblue" );
+			eBalls[i].setAttributeNS(null, 'stroke-width', '5');
+			eBalls[i].setAttributeNS(null, 'id', 'enemy');
+			svg.appendChild(eBalls[i]);
+		}
+		
+		function clonePos(timestamp) {
+			for (let i = 0; i < 10; i++) {
+				
+				if (repeat_clone[i] < 30) {
+					repeat_clone[i]++;
+				} else {
+					incrclonex[i] = (Math.floor(Math.random() * 10)-5)*gamespeed;
+					incrcloney[i] = (Math.floor(Math.random() * 10)-5)*gamespeed;
+					repeat_clone[i] = 0;
+				}
+				
+				if (clonex[i] + incrclonex[i] < 40 || clonex[i] + incrclonex[i] > canvasWidth - 40) {
+					incrclonex[i] *= -1;
+				}
+				
+				if (cloney[i] + incrcloney[i] < 40 || cloney[i] + incrcloney[i] > canvasHeight - 40) {
+					incrcloney[i] *= -1;
+				}
+					
+				clonex[i] += incrclonex[i];	
+				cloney[i] += incrcloney[i];			
+				eBalls[i].setAttributeNS(null, 'cx', clonex[i]);
+				eBalls[i].setAttributeNS(null, 'cy', cloney[i]);
+			
+
+			}
+			window.requestAnimationFrame(clonePos);
+		}
+		
+		function randomPos(timestamp) {
+		
 			if (repeat < 30) {
 				repeat++;
 				
@@ -83,6 +138,7 @@
 			evt.preventDefault();
 			svg.addEventListener('mouseup', startGame);
 			
+			
 			function startGame(evt) {
 				var target = evt.target;
 				evt.preventDefault();
@@ -97,6 +153,7 @@
 				
 				if (whenGameStart == 0) {
 					window.requestAnimationFrame(randomPos);
+					window.requestAnimationFrame(clonePos);
 					whenGameStart = 1;
 				} 
 				
